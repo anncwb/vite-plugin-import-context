@@ -1,10 +1,6 @@
-import { Options } from 'html-minifier-terser';
-import { HtmlTagDescriptor } from 'vite';
-export interface VitePluginHtml {
-  title?: string;
-  minify?: boolean | Options;
-  options?: {
-    [key: string]: any;
-  };
-  tags?: HtmlTagDescriptor[];
+export type RegOptions = string | RegExp | (string | RegExp)[] | null | undefined;
+
+export interface Options {
+  include?: RegOptions;
+  exclude?: RegOptions;
 }

@@ -1,66 +1,53 @@
-import { Plugin } from 'vite';
-import { VitePluginHtml } from './types';
-import { template, isBoolean } from 'lodash';
-import { injectTitle } from './utils';
-import { minify as HtmlMinify, Options } from 'html-minifier-terser';
-import debug from 'debug';
+import type { Plugin, ResolvedConfig } from 'vite';
+import utils from 'rollup-pluginutils';
 
-const log = debug('vite:html');
+import type { Options } from './types';
 
-const defaultMinifyOptions: Options = {
-  minifyCSS: true,
-  minifyJS: true,
-  minifyURLs: true,
-  removeAttributeQuotes: true,
-  trimCustomFragments: true,
-  collapseWhitespace: true,
-};
+import babel from '@babel/core';
 
-export default (opt: VitePluginHtml = {}): Plugin => {
+import { parse } from './parse';
+// import debug from 'debug';
+
+// const log = debug('vite:import-context');
+
+export default (options: Options = {}): Plugin => {
+  let config: ResolvedConfig;
+
+  const filter = utils.createFilter(
+    options.include || ['**/*.js', '**/*.ts', '**/*.tsx', '**/*.jsx'],
+    options.exclude || 'node_modules/**'
+  );
   return {
-    name: 'vite:html',
-    transformIndexHtml: {
-      enforce: 'pre',
-      transform: (html) => {
-        const { options = {} } = opt;
+    name: 'vite:import-context',
+    configResolved(resolvedConfig) {
+      config = resolvedConfig;
+    },
 
-        let compiledHtml = html;
-        try {
-          const compiled = template(compiledHtml);
-          compiledHtml = compiled({
-            viteHtmlPluginOptions: options,
-          });
-        } catch (error) {
-          log('Template  compiled fail\n' + error);
-        }
+    async transform(code, id) {
+      if (!filter(id) || !/importContext/g.test(code)) return;
+      const alias = config.alias;
+      const plugins = [];
+      if (id.endsWith('.tsx')) {
+        plugins.push([
+          require('@babel/plugin-transform-typescript'),
+          { isTSX: true, allowExtensions: true },
+        ]);
+      }
+      const babelResult = babel.transformSync(code, {
+        ast: true,
+        plugins,
+        sourceMaps: false,
+        sourceFileName: id,
+      });
 
-        const { title = '', minify = false, tags = [] } = opt;
-        try {
-          let processCode = injectTitle(compiledHtml, title);
-          if (!minify) {
-            return {
-              html: processCode,
-              tags,
-            };
-          }
-          if (isBoolean(minify)) {
-            return {
-              html: HtmlMinify(processCode, defaultMinifyOptions),
-              tags,
-            };
-          }
-          return {
-            html: HtmlMinify(processCode, {
-              ...defaultMinifyOptions,
-              ...minify,
-            }),
-            tags,
-          };
-        } catch (error) {
-          log('Template transform fail\n' + error);
-          return { html: compiledHtml, tags };
-        }
-      },
+      if (!babelResult) {
+        return code;
+      }
+
+      code = parse(babelResult, code, id, alias);
+      return {
+        code,
+      };
     },
   };
 };

@@ -1,10 +1,11 @@
 {
-  "name": "vite-plugin-html",
-  "version": "2.0.0-beta.1",
-  "description": "A plugin for vite to Minimize index.html and use lodash.template template syntax in index.html",
+  "name": "vite-plugin-import-context",
+  "version": "1.0.0-beta.2",
+  "description": "A dynamic introduction plugin based on vite.Support dynamic import",
   "main": "dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "client.d.ts"
   ],
   "scripts": {
     "dev": "rimraf dist && rimraf es && tsc -w --p tsconfig.json ",
@@ -21,29 +22,30 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/anncwb/vite-plugin-html"
+    "url": "https://github.com/vbenjs/vite-plugin-import-context"
   },
   "bugs": {
-    "url": "https://github.com/anncwb/vite-plugin-html/issues"
+    "url": "https://github.com/vbenjs/vite-plugin-import-context"
   },
-  "homepage": "https://github.com/anncwb/vite-plugin-html/tree/master/#readme",
+  "homepage": "https://github.com/vbenjs/vite-plugin-import-context/tree/master/#readme",
   "dependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-transform-typescript": "^7.12.1",
     "debug": "^4.3.1",
-    "html-minifier-terser": "^5.1.1",
-    "lodash": "^4.17.20"
+    "rollup-pluginutils": "^2.8.2"
   },
   "peerDependencies": {
-    "vite": ">=2.0.0-beta.3"
+    "vite": ">=2.0.0-beta.12"
   },
   "devDependencies": {
+    "@types/babel__core": "^7.1.12",
     "@types/debug": "^4.1.5",
-    "@types/html-minifier-terser": "^5.1.1",
     "@types/lodash": "^4.14.167",
     "@types/node": "^14.14.19",
     "conventional-changelog-cli": "^2.1.1",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "typescript": "^4.1.3",
-    "vite": "^2.0.0-beta.3"
+    "vite": "^2.0.0-beta.12"
   }
 }

@@ -1,16 +1,22 @@
-# vite-plugin-html
+# vite-plugin-import-context
 
-A simple vite plugin. It is developed based on lodash template
+**English** | [中文](./README.zh_CN.md)
 
-## Getting Started
+[![npm][npm-img]][npm-url] [![node][node-img]][node-url]
+
+A dynamic introduction plugin based on vite.Support dynamic import
+
+- 💡 Similar to webpack's require.context
+- ⚡️ Support dynamic loading
+- 📦 Detailed documentation and examples
 
 ### Install (yarn or npm)
 
 **node version:** >=12.0.0
 
-**vite version:** >=2.0.0-beta.3
+**vite version:** >=2.0.0-beta.12
 
-`yarn add vite-plugin-html -D` or `npm i vite-plugin-html -D`
+`yarn add vite-plugin-import-context -D` or `npm i vite-plugin-import-context -D`
 
 **Run Example**
 
@@ -29,114 +35,143 @@ yarn serve
 - Config plugin in vite.config.ts
 
 ```ts
-import VitePluginHtml from 'vite-plugin-html';
+import { UserConfigExport } from 'vite';
+import vue from '@vitejs/plugin-vue';
 
-export default {
-  plugins: [
-    VitePluginHtml({
-      title: 'Vite App',
-      minify: process.env.NODE_ENV === 'production',
-      options: {
-        injectConfig: '<script src="./a.js"></script>',
-      },
-    }),
-  ],
+import dynamicImport from '../src/index';
+
+export default (): UserConfigExport => {
+  return {
+    plugins: [vue(), dynamicImport(/*options*/)],
+  };
 };
+```
 
-// plugins: [VitePluginHtml(Options)],
+- If you are using the `ts` development environment. Then add the type to `tsconfig.json`. The corresponding type definition has been configured
+
+```json
+{
+  "compilerOptions": {
+    "types": ["vite-plugin-import-context/client"]
+  }
+}
 ```
 
 ### Options Description
 
-**title**
+| param   | type    | default | description |
+| ------- | ------- | ------- | ----------- | --------- | ---- | ---------- | ------------------------------------------------ | ---------------------------------------------- |
+| include | `string | RegExp  | (string     | RegExp)[] | null | undefined` | `['**/*.js', '**/*.ts', '**/*.tsx', '**/*.jsx']` | Code directory and file format to be converted |
+| exclude | `string | RegExp  | (string     | RegExp)[] | null | undefined` | `'node_modules/**'`                              | Excluded files/folders                         |
 
-type: `string`
+### Usage in Code
 
-default:''
+In the code, if the keyword function `importContext` appears, it will be transformed by the plugin.
 
-description: The content of the title tag of the index.html tag
+**Please ensure that there are no custom importContext functions or variables in your own code**
 
-**minify**
+### basicExample
 
-type: `boolean|Options`, [Options](https://github.com/terser/html-minifier-terser#options-quick-reference)
-
-default: `isBuild?true:false` .
-
-If it is an object type，Default:
-
-```ts
-  minifyCSS: true,
-  minifyJS: true,
-  minifyURLs: true,
-  removeAttributeQuotes: true,
-  trimCustomFragments: true,
-  collapseWhitespace: true,
-
-```
-
-description: html compression configuration
-
-**options**
-
-type: `{[key:string]:any}`,
-
-default: `{}`
-
-description: User-defined configuration variables. You can use `viteHtmlPluginOptions.xxx` in `index.html` to get
-
-Html Use [lodash.template](https://lodash.com/docs/4.17.15#template) syntax for template processing
-
-**tags**
-
-type: HtmlTagDescriptor[]
+This example is non-dynamic import. And no deep recursion
 
 ```ts
-interface HtmlTagDescriptor {
-  tag: string;
-  attrs?: Record<string, string>;
-  children?: string | HtmlTagDescriptor[];
-  /**
-   * default: 'head-prepend'
-   */
-  injectTo?: 'head' | 'body' | 'head-prepend';
-}
+// xxx.ts
+
+const nextMainModule = importContext({
+  dir: './',
+  deep: false,
+  regexp: /\.ts$/,
+  dynamicImport: false,
+  ignoreCurrentFile: true,
+});
+
+nextMainModule.keys().forEach((key) => {
+  console.log('nextMain=>', nextMainModule(key));
+});
 ```
 
-description: An array of tag descriptor objects ({ tag, attrs, children }) to inject to the existing HTML. Each tag can also specify where it should be injected to (default is prepending to `<head>`)
+### aliasExample
 
-e.g
-
-**vite.config.ts**
+It can be matched according to the alias of vite
 
 ```ts
-import VitePluginHtml from 'vite-plugin-html';
+// xxx.ts
 
-export default {
-  plugins: [
-    VitePluginHtml({
-      options: {
-        opt1: '<script src="./a.js"></script>',
-        opt2: '<script src="./a.js"></script>',
-      },
-    }),
-  ],
-};
+const aliasModule = importContext({
+  dir: '/@/views',
+  deep: true,
+  regexp: /\.ts$/,
+});
+
+aliasModule.keys().forEach((key) => {
+  console.log('aliasModule=>', aliasModule(key));
+});
 ```
 
-**index.html**
+### deepImportExample
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <%= viteHtmlPluginOptions.opt1 %>
-  </head>
-  <body>
-    <%= viteHtmlPluginOptions.opt2 %>
-  </body>
-</html>
+This example is non-dynamic import. And deep recursion
+
+```ts
+// xxx.ts
+
+const nextMainModule = importContext({
+  dir: './',
+  deep: true,
+  regexp: /\.ts$/,
+  dynamicImport: false,
+  ignoreCurrentFile: true,
+});
+
+nextMainModule.keys().forEach((key) => {
+  console.log('nextMain=>', nextMainModule(key));
+});
 ```
+
+### dynamicImportExample
+
+This example is import dynamically. And deep recursion
+
+```ts
+const dynamicModule = importContext({
+  dir: './',
+  deep: true,
+  regexp: /\.ts$/,
+  dynamicImport: true,
+});
+
+dynamicModule.keys().forEach((key: string) => {
+  console.log('dynamicModule=>', dynamicModule(key));
+  dynamicModule(key)().then((res) => {
+    console.log('======================');
+    console.log('dynamicModuleRes=>', res);
+    console.log('======================');
+  });
+});
+```
+
+## ImportContext Parameter description
+
+deep: false, regexp: /\.ts$/, dynamicImport: false, ignoreCurrentFile: true,
+
+| param | type | default | description |
+| --- | --- | --- | --- |
+| dir | `string` | `./` | File path to be imported, support alias |
+| deep | `boolean` | `false` | Whether to introduce deeply |
+| regexp | `regexp` | `/^\.\//` | File matching regular |
+| dynamicImport | `boolean` | `false` | Whether to enable dynamic import |
+| ignoreCurrentFile | `boolean` | `true` | Whether to ignore the current file. If dir='./', It will import itself, this configuration can ignore the introduction of itself |
+
+## NOTE
+
+- The plugin draws on the idea of [rollup-plugin-require-context](https://github.com/elcarim5efil/rollup-plugin-require-context)。Because the plug-in does not support dynamic import and ts files.
+- The function must have a variable to accept the return value of the function. Otherwise it will parse error
 
 ## License
 
 MIT
+
+[npm-img]: https://img.shields.io/npm/v/vite-plugin-import-context.svg
+[npm-url]: https://npmjs.com/package/vite-plugin-import-context
+[node-img]: https://img.shields.io/node/v/vite-plugin-import-context.svg
+[node-url]: https://nodejs.org/en/about/releases/
