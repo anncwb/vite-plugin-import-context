@@ -4,7 +4,7 @@
 
 [![npm][npm-img]][npm-url] [![node][node-img]][node-url]
 
-基于 vite 的动态介绍插件，支持动态介绍
+基于 vite 的动态导入插件，支持动态导入。
 
 - 💡 类似于 webpack 的 require.context
 - ⚡️ 支持动态加载
@@ -72,7 +72,7 @@ export default (): UserConfigExport => {
 
 ### basicExample
 
-此示例是非动态引入。 而且没有深度递归
+此示例是非动态导入。 而且没有深度递归
 
 ```ts
 // xxx.ts
@@ -110,7 +110,7 @@ aliasModule.keys().forEach((key) => {
 
 ### deepImportExample
 
-此示例是非动态引入。 和深度递归
+此示例是非动态导入。 和深度递归
 
 ```ts
 // xxx.ts
@@ -130,7 +130,7 @@ nextMainModule.keys().forEach((key) => {
 
 ### dynamicImportExample
 
-本示例是动态引入的且深度递归
+本示例是动态导入的且深度递归
 
 ```ts
 const dynamicModule = importContext({
@@ -158,7 +158,7 @@ dynamicModule.keys().forEach((key: string) => {
 | deep | `boolean` | `false` | 是否深入导入 |
 | regexp | `regexp` | `/^\.\//` | 正则文件匹配 |
 | dynamicImport | `boolean` | `false` | 是否启用动态导入 |
-| ignoreCurrentFile | `boolean` | `true` | 是否忽略当前文件。 如果 dir =`./`，它将自我引入，此配置可以忽略自身的介绍 |
+| ignoreCurrentFile | `boolean` | `true` | 是否忽略当前文件。 如果 dir =`./`，它将自我导入，此配置可以忽略自身的导入 |
 
 ## NOTE
 

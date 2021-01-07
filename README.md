@@ -4,7 +4,7 @@
 
 [![npm][npm-img]][npm-url] [![node][node-img]][node-url]
 
-A dynamic introduction plugin based on vite.Support dynamic import
+A dynamic import plugin based on vite.Support dynamic import
 
 - 💡 Similar to webpack's require.context
 - ⚡️ Support dynamic loading
@@ -160,7 +160,7 @@ deep: false, regexp: /\.ts$/, dynamicImport: false, ignoreCurrentFile: true,
 | deep | `boolean` | `false` | Whether to introduce deeply |
 | regexp | `regexp` | `/^\.\//` | File matching regular |
 | dynamicImport | `boolean` | `false` | Whether to enable dynamic import |
-| ignoreCurrentFile | `boolean` | `true` | Whether to ignore the current file. If dir='./', It will import itself, this configuration can ignore the introduction of itself |
+| ignoreCurrentFile | `boolean` | `true` | Whether to ignore the current file. If dir='./', It will import itself, this configuration can ignore the import of itself |
 
 ## NOTE
 
