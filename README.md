@@ -59,10 +59,10 @@ export default (): UserConfigExport => {
 
 ### Options Description
 
-| param   | type    | default | description |
-| ------- | ------- | ------- | ----------- | --------- | ---- | ---------- | ------------------------------------------------ | ---------------------------------------------- |
-| include | `string | RegExp  | (string     | RegExp)[] | null | undefined` | `['**/*.js', '**/*.ts', '**/*.tsx', '**/*.jsx']` | Code directory and file format to be converted |
-| exclude | `string | RegExp  | (string     | RegExp)[] | null | undefined` | `'node_modules/**'`                              | Excluded files/folders                         |
+| param | type | default | description |
+| --- | --- | --- | --- |
+| include | `string / RegExp / (string / RegExp)[] / null / undefined` | `['**/*.js', '**/*.ts', '**/*.tsx', '**/*.jsx']` | Code directory and file format to be converted |
+| exclude | `string / RegExp / (string / RegExp)[] / null / undefined` | `'node_modules/**'` | Excluded files/folders |
 
 ### Usage in Code
 

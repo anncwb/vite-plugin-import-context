@@ -59,10 +59,10 @@ export default (): UserConfigExport => {
 
 ### 选项说明
 
-| param   | type    | default | description |
-| ------- | ------- | ------- | ----------- | --------- | ---- | ---------- | ------------------------------------------------ | ------------------- |
-| include | `string | RegExp  | (string     | RegExp)[] | null | undefined` | `['**/*.js', '**/*.ts', '**/*.tsx', '**/*.jsx']` | 包含的文件格式      |
-| exclude | `string | RegExp  | (string     | RegExp)[] | null | undefined` | `'node_modules/**'`                              | 排除的的文件/文件夹 |
+| param | type | default | description |
+| --- | --- | --- | --- |
+| include | `string / RegExp / (string / RegExp)[] / null / undefined` | `['**/*.js', '**/*.ts', '**/*.tsx', '**/*.jsx']` | 包含的文件格式 |
+| exclude | `string / RegExp / (string / RegExp)[] / null / undefined` | `'node_modules/**'` | 排除的的文件/文件夹 |
 
 ### 在代码内使用
 
