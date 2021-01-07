@@ -1,9 +1,9 @@
 import type { Plugin, ResolvedConfig } from 'vite';
-import utils from 'rollup-pluginutils';
+import { createFilter } from 'rollup-pluginutils';
 
 import type { Options } from './types';
 
-import babel from '@babel/core';
+import { transformSync } from '@babel/core';
 
 import { parse } from './parse';
 // import debug from 'debug';
@@ -13,7 +13,7 @@ import { parse } from './parse';
 export default (options: Options = {}): Plugin => {
   let config: ResolvedConfig;
 
-  const filter = utils.createFilter(
+  const filter = createFilter(
     options.include || ['**/*.js', '**/*.ts', '**/*.tsx', '**/*.jsx'],
     options.exclude || 'node_modules/**'
   );
@@ -33,7 +33,7 @@ export default (options: Options = {}): Plugin => {
           { isTSX: true, allowExtensions: true },
         ]);
       }
-      const babelResult = babel.transformSync(code, {
+      const babelResult = transformSync(code, {
         ast: true,
         plugins,
         sourceMaps: false,
