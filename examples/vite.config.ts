@@ -1,7 +1,7 @@
 import { UserConfigExport } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
-import dynamicImport from 'vite-plugin-import-context';
+import dynamicImport from '../src';
 
 export default (): UserConfigExport => {
   return {

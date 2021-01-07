@@ -194,7 +194,7 @@
     "@babel/parser" "^7.12.7"
     "@babel/types" "^7.12.7"
 
-"@babel/traverse@^7.12.1", "@babel/traverse@^7.12.10", "@babel/traverse@^7.12.5":
+"@babel/traverse@^7.12.1", "@babel/traverse@^7.12.10", "@babel/traverse@^7.12.12", "@babel/traverse@^7.12.5":
   version "7.12.12"
   resolved "https://registry.npmjs.org/@babel/traverse/-/traverse-7.12.12.tgz#d0cd87892704edd8da002d674bc811ce64743376"
   integrity sha512-s88i0X0lPy45RrLM8b9mz8RPH5FqO9G9p7ti59cToE44xFm1Q+Pjh5Gq4SXBbtb88X7Uy7pexeqRIQDDMNkL0w==
@@ -766,13 +766,14 @@ util-deprecate@^1.0.2:
   resolved "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
 
-vite-plugin-import-context@^1.0.0-beta.3:
-  version "1.0.0-beta.3"
-  resolved "https://registry.npmjs.org/vite-plugin-import-context/-/vite-plugin-import-context-1.0.0-beta.3.tgz#9b8b4796e4f5357e3626038f99f3fef2e85c7aa4"
-  integrity sha512-er/gQRTvzA8649uxsDgsJu53W+678GrSkgpL+8pe68FUvFJAy7qzhALW6wOl9mypLbZRTfHenS8dalm3x/4uaA==
+vite-plugin-import-context@^1.0.0-beta.4:
+  version "1.0.0-beta.4"
+  resolved "https://registry.npmjs.org/vite-plugin-import-context/-/vite-plugin-import-context-1.0.0-beta.4.tgz#070f304b3d4695e71655fac5142920f73289cdea"
+  integrity sha512-lBftveYEijWWFoLN5AlvOqT13pTxRqwfOgLLlEywbbihzMpysssER16l3ilGWEgCDOCI0cxoHJh+41NPjuX8sQ==
   dependencies:
     "@babel/core" "^7.12.10"
     "@babel/plugin-transform-typescript" "^7.12.1"
+    "@babel/traverse" "^7.12.12"
     debug "^4.3.1"
     rollup-pluginutils "^2.8.2"
 

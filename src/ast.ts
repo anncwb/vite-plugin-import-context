@@ -1,8 +1,9 @@
-import type { BabelFileResult, Node } from '@babel/core';
+import type { BabelFileResult } from '@babel/core';
 import path from 'path';
 import type { Alias } from 'vite';
 import { isArray, isString, isRegExp } from './util';
 
+import traverse from '@babel/traverse';
 export interface CompilerResult {
   dirname: string;
   deep: boolean;
@@ -73,61 +74,37 @@ export function compilerResult(
 }
 
 function extractExpression(babelResult: BabelFileResult) {
-  const body = babelResult.ast?.program?.body ?? [];
   let resList: Record<string, any>[] = [];
 
-  for (const n of body) {
-    const node = n as any;
+  traverse(babelResult.ast, {
+    CallExpression(path) {
+      const node = path.node;
+      const { start, end } = node;
+      if (node.callee.type === 'Identifier' && node.callee.name === 'importContext') {
+        const ret: Record<string, any> = {};
+        node.arguments.map((item) => {
+          if (item.type === 'ObjectExpression') {
+            item.properties.forEach((p) => {
+              if (p.type === 'ObjectProperty') {
+                const type = p.value.type;
+                const pattern = (p.value as any).pattern;
 
-    // expression
-    if (node.type === 'VariableDeclaration') {
-      const declaration = node.declarations?.[0];
-
-      if (declaration?.type === 'VariableDeclarator') {
-        const fnType = declaration?.init?.type;
-        if (fnType === 'CallExpression') {
-          const expression = declaration?.init;
-          if (isImportContextCall(expression)) {
-            const args = expression.arguments || [];
-            for (const arg of args) {
-              const properties = arg?.properties || [];
-              const params = getImportContextParams(properties);
-              resList.push({
-                start: expression.start,
-                end: expression.end,
-                args: params,
-              });
-            }
+                const value =
+                  type === 'RegExpLiteral' ? new RegExp(pattern) : (p.value as any).value;
+                ret[`${(p.key as any).name}`] = value;
+              }
+              return null;
+            });
           }
-        }
+        });
+        resList.push({
+          start: start,
+          end: end,
+          args: ret,
+        });
       }
-    }
-  }
+    },
+  });
+
   return resList;
-}
-
-// Get function parameters
-function getImportContextParams(properties: Node[]) {
-  let ret: Record<string, any> = {};
-  for (const prop of properties) {
-    if (prop.type === 'ObjectProperty') {
-      const normalLiteral = ['NullLiteral', 'BooleanLiteral', 'StringLiteral', 'NumericLiteral'];
-      const literalList = [...normalLiteral, 'RegExpLiteral'];
-      const type = prop.value.type;
-      const pattern = (prop.value as any).pattern;
-      const value = type === 'RegExpLiteral' ? new RegExp(pattern) : (prop.value as any).value;
-      if (literalList.includes(type)) {
-        ret[`${(prop.key as any).name}`] = value;
-      }
-    }
-  }
-  return ret;
-}
-
-function isImportContextCall(node: any) {
-  return (
-    node.type === 'CallExpression' &&
-    node.callee.type === 'Identifier' &&
-    node.callee.name === 'importContext'
-  );
 }
