@@ -162,7 +162,7 @@ dynamicModule.keys().forEach((key: string) => {
 
 ## NOTE
 
--该插件借鉴了[rollup-plugin-require-context](https://github.com/elcarim5efil/rollup-plugin-require-context)的思想。因为该插件不支持动态导入和 ts 文件
+-该插件借鉴了[rollup-plugin-require-context](https://github.com/elcarim5efil/rollup-plugin-require-context)的思想。因为该插件不支持动态导入和 ts 文件，所以我重新写了一个。
 
 - importContext 函数必须具有要接受函数返回值的变量。 否则它将解析错误
 

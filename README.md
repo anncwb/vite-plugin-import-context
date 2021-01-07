@@ -164,7 +164,7 @@ deep: false, regexp: /\.ts$/, dynamicImport: false, ignoreCurrentFile: true,
 
 ## NOTE
 
-- The plugin draws on the idea of [rollup-plugin-require-context](https://github.com/elcarim5efil/rollup-plugin-require-context)。Because the plug-in does not support dynamic import and ts files.
+- The plugin draws on the idea of [rollup-plugin-require-context](https://github.com/elcarim5efil/rollup-plugin-require-context)。Because the plug-in does not support dynamic import and ts files.So i finished it
 - The function must have a variable to accept the return value of the function. Otherwise it will parse error
 
 ## License
