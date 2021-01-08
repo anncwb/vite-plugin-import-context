@@ -36,8 +36,6 @@ declare interface ImportContextOptions {
    * @default true
    */
   ignoreCurrentFile?: boolean;
-
-  customTransform?: () => void;
 }
 
 declare function importContext<

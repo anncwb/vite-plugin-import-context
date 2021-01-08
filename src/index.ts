@@ -1,11 +1,12 @@
 import type { Plugin, ResolvedConfig } from 'vite';
-import { createFilter } from 'rollup-pluginutils';
+import { createFilter } from '@rollup/pluginutils';
 
 import type { Options } from './types';
 
 import { transformSync } from '@babel/core';
 
 import { parse } from './parse';
+
 // import debug from 'debug';
 
 // const log = debug('vite:import-context');
